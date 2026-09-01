@@ -48,3 +48,4 @@ Login uses the existing `POST /auth/login` and routes by `user.role`
 - Loyalty points earned per Add = `floor(billAmount / franchise.pointsPerAmount)`, default ₹100 = 1 point.
 - A customer becomes "reward eligible" once `loyaltyPoints >= franchise.rewardThreshold` (default 90, editable per franchise from the Admin Dashboard table).
 - Excel export uses `exceljs` on the backend (added to `package.json` — run `npm install` on the backend after unzipping).
+# eggatm-crm
