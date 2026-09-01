@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiGet, apiPost, apiPut, apiDelete, apiPatch } from "../../api/apiHelpers";
+import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/Button";
 import { Loader, EmptyState, Toast } from "../../components/Feedback";
 import { useToast } from "../../components/useToast";
@@ -38,9 +39,11 @@ import {
 } from "./Reminders";
 
 export default function ViewCustomers() {
+  const { user } = useAuth();
   const { toast, showToast, closeToast } = useToast();
 
   const [customers, setCustomers] = useState([]);
+  const [franchise, setFranchise] = useState(null);
   const [search, setSearch] = useState("");
   const [daysFilter, setDaysFilter] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -81,8 +84,34 @@ export default function ViewCustomers() {
   const load = async (q) => {
     setLoading(true);
     try {
+      let franchiseName = "Franchise";
+      
+      // Fetch franchise info if user has franchiseId
+      if (user?.franchiseId) {
+        try {
+          const franchiseRes = await apiGet(`/franchise/${user.franchiseId}/customers`);
+          if (franchiseRes?.data?.data?.franchise?.name) {
+            franchiseName = franchiseRes.data.data.franchise.name;
+            setFranchise(franchiseRes.data.data.franchise);
+          }
+        } catch (franchiseError) {
+          console.warn("Could not fetch franchise info:", franchiseError);
+          // Use fallback
+          franchiseName = user?.franchiseName || "Franchise";
+        }
+      }
+
+      // Fetch customers with proper enrichment
       const res = await apiGet(`/customers${q ? `?search=${q}` : ""}`);
-      setCustomers(res.data.data || []);
+      const customersData = res.data.data || [];
+      
+      // Attach franchise name to each customer
+      const enrichedCustomers = customersData.map(c => ({
+        ...c,
+        franchiseName: c.franchiseName || c.franchise?.name || franchiseName
+      }));
+      
+      setCustomers(enrichedCustomers);
     } catch (err) {
       showToast(
         err?.response?.data?.message || "Failed to load customers",

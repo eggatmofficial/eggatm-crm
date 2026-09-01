@@ -14,6 +14,7 @@ import FranchiseDashboard from "./pages/franchise/FranchiseDashboard";
 import ViewCustomers from "./pages/franchise/ViewCustomers";
 import Contacts from "./pages/franchise/Contacts";
 import Rewards from "./pages/franchise/Rewards";
+import Campaign from "./pages/franchise/Campaign";
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="customers" element={<ViewCustomers />} />
             <Route path="contacts" element={<Contacts />} />
             <Route path="rewards" element={<Rewards />} />
+            <Route path="campaign" element={<Campaign />} />
           </Route>
         </Route>
 

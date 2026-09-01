@@ -285,6 +285,7 @@ export default function AddCustomerModal({ open, onClose, onSaved }) {
       setSaving(false);
     }
   };
+  console.log("result", result);
 
  const getWhatsappMessage = () => {
     if (!result) return "";

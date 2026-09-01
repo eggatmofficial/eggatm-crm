@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiGet, apiPost, apiDelete, apiPatch } from "../../api/apiHelpers";
+import { useAuth } from "../../context/AuthContext";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { Loader, EmptyState, Toast } from "../../components/Feedback";
@@ -35,9 +36,11 @@ import {
 } from "./Reminders";
 
 export default function Contacts() {
+  const { user } = useAuth();
   const { toast, showToast, closeToast } = useToast();
 
   const [contacts, setContacts] = useState([]);
+  const [franchise, setFranchise] = useState(null);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -100,10 +103,36 @@ export default function Contacts() {
   const load = async (q) => {
     setLoading(true);
     try {
+      let franchiseName = "Franchise";
+      
+      // Fetch franchise info if user has franchiseId
+      if (user?.franchiseId) {
+        try {
+          const franchiseRes = await apiGet(`/franchise/${user.franchiseId}/customers`);
+          if (franchiseRes?.data?.data?.franchise?.name) {
+            franchiseName = franchiseRes.data.data.franchise.name;
+            setFranchise(franchiseRes.data.data.franchise);
+          }
+        } catch (franchiseError) {
+          console.warn("Could not fetch franchise info:", franchiseError);
+          // Use fallback
+          franchiseName = user?.franchiseName || "Franchise";
+        }
+      }
+
+      // Fetch contacts with proper enrichment
       const params = new URLSearchParams({ contactsOnly: "true" });
       if (q) params.set("search", q);
       const res = await apiGet(`/customers?${params.toString()}`);
-      setContacts(res.data.data || []);
+      const contactsData = res.data.data || [];
+      
+      // Attach franchise name to each contact
+      const enrichedContacts = contactsData.map(c => ({
+        ...c,
+        franchiseName: c.franchiseName || c.franchise?.name || franchiseName
+      }));
+      
+      setContacts(enrichedContacts);
     } catch (err) {
       showToast(
         err?.response?.data?.message || "Failed to load contacts",

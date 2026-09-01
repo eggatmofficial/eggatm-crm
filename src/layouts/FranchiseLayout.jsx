@@ -1,5 +1,5 @@
 import Shell from "./Shell";
-import { LayoutDashboard, Users, Gift,BookUser  } from "lucide-react";
+import { LayoutDashboard, Users, Gift, BookUser, Megaphone } from "lucide-react";
 
 export default function FranchiseLayout() {
   return (
@@ -11,6 +11,7 @@ export default function FranchiseLayout() {
         { to: "/franchise/customers", label: "Customers", icon: Users },
         { to: "/franchise/contacts", label: "Contacts", icon: BookUser },
         { to: "/franchise/rewards", label: "Rewards", icon: Gift },
+        { to: "/franchise/campaign", label: "Campaign", icon: Megaphone },
       ]}
     />
   );
