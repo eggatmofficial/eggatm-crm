@@ -9,6 +9,7 @@ import FranchiseLayout from "./layouts/FranchiseLayout";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import FranchiseCustomersPage from "./pages/admin/FranchiseCustomersPage";
+import FeedbacksPage from "./pages/admin/FeedbacksPage";
 
 import FranchiseDashboard from "./pages/franchise/FranchiseDashboard";
 import ViewCustomers from "./pages/franchise/ViewCustomers";
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="franchises/:id" element={<FranchiseCustomersPage />} />
+            <Route path="feedbacks" element={<FeedbacksPage />} />
           </Route>
         </Route>
 

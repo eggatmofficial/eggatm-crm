@@ -1,5 +1,5 @@
 import Shell from "./Shell";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, MessageSquare } from "lucide-react";
 
 export default function AdminLayout() {
   return (
@@ -8,8 +8,8 @@ export default function AdminLayout() {
       subtitle="Admin Dashboard"
       navItems={[
         { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
+        { to: "/admin/feedbacks", label: "Customer Feedbacks", icon: MessageSquare },
       ]}
     />
   );
 }
-
