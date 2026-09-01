@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (Tailwind v4 CSS-first config) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Brand palette — sourced from the EGG! ATM logo (black + amber + white) */
+  --navy: #171308;       /* kept for backward-compat with existing components; now near-black/charcoal */
+  --navy-deep: #0b0a06;
+  --amber: #f6a614;
+  --amber-deep: #d98a06;
+  --amber-soft: #fde3b0;
+  --ink: #17140d;
+  --paper: #f7f5f0;
+
+  /* Surfaces that respond to the light/dark toggle */
+  --bg-app: #f7f5f0;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #f4f1ea;
+  --text-primary: #17140d;
+  --text-secondary: #6b6455;
+  --border-subtle: #e7e2d6;
+  --sidebar-bg: #14110a;
+  --sidebar-bg-2: #0b0a06;
+}
+
+.dark {
+  --bg-app: #0e0d0a;
+  --bg-surface: #1a1712;
+  --bg-surface-2: #221e17;
+  --text-primary: #f5f2ea;
+  --text-secondary: #a89f8c;
+  --border-subtle: #33301f2b;
+  --border-subtle: #322c1f;
+  --sidebar-bg: #0b0a06;
+  --sidebar-bg-2: #000000;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ---------------------------------------------------------------------
+   Dark-mode safety net.
+   Many existing pages (dashboards, tables, modals) were written with
+   fixed Tailwind utility classes (bg-white, text-slate-900, ...).
+   Rather than touching every file, we re-map the common ones whenever
+   an ancestor has the `.dark` class, so the whole app follows the
+   light/dark toggle consistently.
+--------------------------------------------------------------------- */
+.dark .bg-white { background-color: var(--bg-surface) !important; }
+.dark .bg-\[var\(--paper\)\] { background-color: var(--bg-app) !important; }
+.dark .bg-slate-50 { background-color: var(--bg-surface-2) !important; }
+.dark .bg-slate-100 { background-color: #262115 !important; }
+.dark .bg-slate-100\/70 { background-color: #26211580 !important; }
+.dark .hover\:bg-slate-50:hover { background-color: #221e17 !important; }
+.dark .hover\:bg-slate-100:hover { background-color: #2a2518 !important; }
+
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-300 { border-color: var(--border-subtle) !important; }
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border-subtle) !important; }
+
+.dark .text-slate-900 { color: var(--text-primary) !important; }
+.dark .text-slate-800 { color: #ece7db !important; }
+.dark .text-slate-700 { color: #d8d2c2 !important; }
+.dark .text-slate-600 { color: var(--text-secondary) !important; }
+.dark .text-slate-500 { color: #8d8471 !important; }
+.dark .text-slate-400 { color: #6f6858 !important; }
+
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: var(--bg-surface-2) !important;
+  color: var(--text-primary) !important;
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: #7a7260 !important; }
+
+.dark table thead { background-color: var(--bg-surface-2); }
+.dark .shadow-sm,
+.dark .shadow-xl,
+.dark .shadow-2xl { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important; }
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6dae3;
+  border-radius: 999px;
+}
