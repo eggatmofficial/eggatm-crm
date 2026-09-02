@@ -208,10 +208,12 @@ import Button from "../../components/Button";
 import { apiPost, apiGet } from "../../api/apiHelpers";
 import { CheckCircle2, MessageCircle, Loader2 } from "lucide-react";
 import { normalizePhoneForWhatsapp } from "./Reminders";
+import { useAuth } from "../../context/AuthContext";
 
 const EMPTY = { name: "", phone: "", billAmount: "" };
 
 export default function AddCustomerModal({ open, onClose, onSaved }) {
+  const { user } = useAuth();
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -293,7 +295,7 @@ export default function AddCustomerModal({ open, onClose, onSaved }) {
     // Extract customer name (or fallback to Customer)
     const customerName = form.name ? form.name.replace(/^ATM-/, "") : "Customer";
     // Replace with your dynamic franchise name variable if available
-    const franchiseName = result?.franchiseName || "Main Branch"; 
+    const franchiseName = result?.franchiseName || user?.franchiseName || "";
 
     const msg = `Hi ${customerName}! 👋❤️
 

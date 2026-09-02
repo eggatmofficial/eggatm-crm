@@ -3,9 +3,12 @@ import { apiGet, apiPatch, apiPost } from "../../api/apiHelpers";
 import Button from "../../components/Button";
 import { Loader, EmptyState, Toast } from "../../components/Feedback";
 import { useToast } from "../../components/useToast";
-import { Gift, Phone, RotateCcw, UserPlus, Check } from "lucide-react";
+import { Gift, Phone, RotateCcw, UserPlus, Check, MessageCircle } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { normalizePhoneForWhatsapp } from "./Reminders";
 
 export default function Rewards() {
+  const { user } = useAuth();
   const { toast, showToast, closeToast } = useToast();
 
   const [customers, setCustomers] = useState([]);
@@ -71,6 +74,42 @@ export default function Rewards() {
     }
   };
 
+  const sendRewardWhatsapp = (customer) => {
+    if (!customer.phone) {
+      showToast("Customer has no phone number", "error");
+      return;
+    }
+
+    const customerName = customer.name
+      ? customer.name.replace(/^ATM-/, "").trim()
+      : "Customer";
+    const franchiseName = user?.franchiseName || "";
+
+    const msg =
+`🎉 Congratulations, ${customerName}! 🥚❤️
+
+You have reached 100 Reward Points! ⭐
+
+🎁 Your FREE DISH is ready!
+
+Redeem any ONE DISH from our menu at:
+
+🥚 Egg! ATM – ${franchiseName}
+
+Just tell us your mobile number and redeem your reward! 😋🔥
+
+Any Time Muttai ❤️`;
+
+    const cleanPhone = normalizePhoneForWhatsapp(customer.phone);
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const url = isMobile
+      ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`
+      : `https://web.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
+
+    window.open(url, "_blank", "noopener,noreferrer");
+    showToast(`WhatsApp opened for ${customerName}`);
+  };
+
   if (loading) return <Loader label="Loading rewards..." />;
 
   return (
@@ -131,6 +170,14 @@ export default function Rewards() {
                             {isSaved ? <Check size={14} /> : <UserPlus size={14} />}
                             {isSaved ? "Saved" : "Save"}
                           </Button>
+                          <button
+                            onClick={() => sendRewardWhatsapp(c)}
+                            className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:scale-95"
+                            title="Send reward congratulation on WhatsApp"
+                          >
+                            <MessageCircle size={14} />
+                            WhatsApp
+                          </button>
                           <Button
                             variant="outline"
                             className="!px-3 !py-1.5"

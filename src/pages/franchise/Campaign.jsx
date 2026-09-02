@@ -60,7 +60,7 @@ export default function Campaign() {
   const { toast, showToast, closeToast } = useToast();
 
   const [customers, setCustomers] = useState([]);
-  const [franchiseName, setFranchiseName] = useState("Main Branch");
+  const [franchiseName, setFranchiseName] = useState("");
   const [franchisePhone, setFranchisePhone] = useState("");
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -107,8 +107,12 @@ export default function Campaign() {
   const loadData = async () => {
     setLoading(true);
     try {
-      let fName = user?.franchiseName || "Main Branch";
-      let fPhone = user?.phone || "";
+      let fName = user?.franchiseName || "";
+      let fPhone = user?.franchisePhone || user?.phone || "";
+
+      // Set immediately from user object so it shows without waiting for API
+      setFranchiseName(fName);
+      setFranchisePhone(fPhone);
 
       if (user?.franchiseId) {
         try {

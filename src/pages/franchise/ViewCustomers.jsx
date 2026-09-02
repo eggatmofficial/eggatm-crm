@@ -349,8 +349,8 @@ export default function ViewCustomers() {
               <table className="w-full text-left text-sm">
                 <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                   <tr>
-                    <th className="px-5 py-3 font-medium">Name</th>
                     <th className="px-5 py-3 font-medium">Actions</th>
+                    <th className="px-5 py-3 font-medium">Name</th>
                     <th className="px-5 py-3 font-medium">Loyalty Points</th>
                     <th className="px-5 py-3 font-medium">Redemptions</th>
                     <th className="px-5 py-3 font-medium">Status</th>
@@ -367,11 +367,7 @@ export default function ViewCustomers() {
      
                     return (
                       <tr key={c._id} className="hover:bg-slate-50/60">
-                        {/* Name */}
-                        <td className="px-5 py-3.5 font-medium text-slate-800 whitespace-nowrap">
-                          {c.name || "—"}
-                        </td>
-
+                      
                         
                         {/* Actions */}
                         <td className="px-5 py-3.5 whitespace-nowrap">
@@ -450,6 +446,12 @@ export default function ViewCustomers() {
                             </button>
                           </div>
                         </td>
+
+                          {/* Name */}
+                        <td className="px-5 py-3.5 font-medium text-slate-800 whitespace-nowrap">
+                          {c.name || "—"}
+                        </td>
+
 
                         {/* Loyalty Points */}
                         <td className="px-5 py-3.5 font-semibold text-amber-700 dark:text-[var(--amber)]">

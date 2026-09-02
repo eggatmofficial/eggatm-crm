@@ -146,7 +146,7 @@ export default function Shell({ title, subtitle, navItems }) {
           </button>
 
           <div className={collapsed ? "lg:hidden" : ""}>
-            <p className="truncate text-sm font-medium">{user?.name}</p>
+            <p className="truncate text-sm font-medium">{user?.franchiseName || user?.name}</p>
             <p className="truncate text-xs capitalize text-white/50">{user?.role}</p>
           </div>
           <button
