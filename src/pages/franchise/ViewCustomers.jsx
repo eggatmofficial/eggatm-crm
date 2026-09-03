@@ -85,7 +85,7 @@ export default function ViewCustomers() {
     setLoading(true);
     try {
       let franchiseName = "Franchise";
-      
+
       // Fetch franchise info if user has franchiseId
       if (user?.franchiseId) {
         try {
@@ -104,13 +104,13 @@ export default function ViewCustomers() {
       // Fetch customers with proper enrichment
       const res = await apiGet(`/customers${q ? `?search=${q}` : ""}`);
       const customersData = res.data.data || [];
-      
+
       // Attach franchise name to each customer
       const enrichedCustomers = customersData.map(c => ({
         ...c,
         franchiseName: c.franchiseName || c.franchise?.name || franchiseName
       }));
-      
+
       setCustomers(enrichedCustomers);
     } catch (err) {
       showToast(
@@ -147,9 +147,9 @@ export default function ViewCustomers() {
         prev.map((item) =>
           item._id === customer._id
             ? {
-                ...item,
-                isContact: true,
-              }
+              ...item,
+              isContact: true,
+            }
             : item
         )
       );
@@ -201,15 +201,21 @@ export default function ViewCustomers() {
 
         <div className="flex items-center gap-2">
 
+
+            {/* Quick Add Customer */}
+          <Button variant="amber" onClick={() => setAddOpen(true)} className="px-3.5 py-2 text-xs sm:text-sm">
+            <Plus size={15} />
+            <span>Add</span>
+          </Button>
+
           {/* Filters & Tools Toggle Button */}
           <button
             type="button"
             onClick={() => setShowFilters((v) => !v)}
-            className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold shadow-sm transition ${
-              showFilters || hasActiveFilters
+            className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold shadow-sm transition ${showFilters || hasActiveFilters
                 ? "border-amber-400 bg-amber-50 text-amber-900"
                 : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+              }`}
           >
             <SlidersHorizontal size={14} className={hasActiveFilters ? "text-amber-600" : "text-slate-500"} />
             <span className="hidden sm:inline">Filters</span>
@@ -219,7 +225,7 @@ export default function ViewCustomers() {
           </button>
 
 
-                {/* Excel Download Button */}
+          {/* Excel Download Button */}
           <Button
             variant="outline"
             disabled={displayedCustomers.length === 0}
@@ -230,11 +236,7 @@ export default function ViewCustomers() {
             <span className="hidden md:inline">Export</span> Excel
           </Button>
 
-          {/* Quick Add Customer */}
-          <Button variant="amber" onClick={() => setAddOpen(true)} className="px-3.5 py-2 text-xs sm:text-sm">
-            <Plus size={15} />
-            <span>Add</span>
-          </Button>
+        
         </div>
       </div>
 
@@ -288,11 +290,10 @@ export default function ViewCustomers() {
                     setSortByRedemptions((v) => !v);
                     setCurrentPage(1);
                   }}
-                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
-                    sortByRedemptions
+                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition ${sortByRedemptions
                       ? "border-amber-300 bg-amber-50 text-amber-800 font-semibold"
                       : "border-slate-300 bg-white text-slate-600 hover:bg-slate-50"
-                  }`}
+                    }`}
                 >
                   <Repeat size={13} />
                   <span>Most Redeemed</span>
@@ -349,13 +350,13 @@ export default function ViewCustomers() {
               <table className="w-full text-left text-sm">
                 <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                   <tr>
-                    <th className="px-5 py-3 font-medium">Actions</th>
                     <th className="px-5 py-3 font-medium">Name</th>
+                    <th className="px-5 py-3 font-medium">Actions</th>
                     <th className="px-5 py-3 font-medium">Loyalty Points</th>
                     <th className="px-5 py-3 font-medium">Redemptions</th>
                     <th className="px-5 py-3 font-medium">Status</th>
                     <th className="px-5 py-3 font-medium whitespace-nowrap">Last Visit</th>
-                     <th className="px-5 py-3 font-medium">Phone</th>
+                    <th className="px-5 py-3 font-medium">Phone</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -364,15 +365,20 @@ export default function ViewCustomers() {
                     const due = isReminderDue(c);
                     const tier = pickReminderTier(days);
                     const isSaved = Boolean(c.isContact || savedIds.has(c._id));
-     
+
                     return (
                       <tr key={c._id} className="hover:bg-slate-50/60">
-                      
-                        
+
+
+                        {/* Name */}
+                        <td className="px-5 py-3.5 font-medium text-slate-800 whitespace-nowrap">
+                          {c.name || "—"}
+                        </td>
+
                         {/* Actions */}
                         <td className="px-5 py-3.5 whitespace-nowrap">
                           <div className="flex items-center gap-1.5">
-                           
+
 
                             <a
                               href={getCallLink(c)}
@@ -394,15 +400,14 @@ export default function ViewCustomers() {
                               Remind
                             </a>
 
-                             <button
+                            <button
                               type="button"
                               disabled={isSaved || savingId === c._id}
                               onClick={() => addToContact(c)}
-                              className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition ${
-                                isSaved
+                              className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition ${isSaved
                                   ? "border-emerald-200 bg-emerald-50 text-emerald-700 cursor-default"
                                   : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
-                              }`}
+                                }`}
                               title={isSaved ? "Saved to contacts" : "Save to contacts"}
                             >
                               {savingId === c._id ? (
@@ -447,10 +452,6 @@ export default function ViewCustomers() {
                           </div>
                         </td>
 
-                          {/* Name */}
-                        <td className="px-5 py-3.5 font-medium text-slate-800 whitespace-nowrap">
-                          {c.name || "—"}
-                        </td>
 
 
                         {/* Loyalty Points */}
@@ -462,11 +463,10 @@ export default function ViewCustomers() {
                         <td className="px-5 py-3.5 whitespace-nowrap">
                           {c.rewardsRedeemed > 0 ? (
                             <span
-                              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                                c.rewardsRedeemed >= 3
+                              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${c.rewardsRedeemed >= 3
                                   ? "bg-amber-100 text-amber-700"
                                   : "bg-slate-100 text-slate-600"
-                              }`}
+                                }`}
                             >
                               <Repeat size={12} />
                               {c.rewardsRedeemed}×
@@ -497,11 +497,10 @@ export default function ViewCustomers() {
                             </span>
                           ) : (
                             <span
-                              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${
-                                due
+                              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${due
                                   ? "bg-rose-50 border border-rose-200 text-rose-700"
                                   : "bg-slate-50 border border-slate-200 text-slate-600"
-                              }`}
+                                }`}
                               title={tier ? `Reminder Tier: ${tier.label}` : undefined}
                             >
                               <Clock size={11} className={due ? "text-rose-500" : "text-slate-400"} />
@@ -513,7 +512,7 @@ export default function ViewCustomers() {
 
 
 
-                         {/* Phone */}
+                        {/* Phone */}
                         <td className="px-5 py-3.5 whitespace-nowrap">
                           <span className="inline-flex items-center gap-1.5 text-slate-700">
                             <Phone size={13} className="text-slate-400" />

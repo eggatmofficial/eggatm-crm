@@ -134,9 +134,10 @@ Any Time Muttai ❤️`;
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
                   <th className="px-6 py-3 font-medium">Name</th>
+                   <th className="px-6 py-3 font-medium text-right">Actions</th>
                   <th className="px-6 py-3 font-medium">Phone</th>
                   <th className="px-6 py-3 font-medium">Points</th>
-                  <th className="px-6 py-3 font-medium text-right">Actions</th>
+                 
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -147,18 +148,7 @@ Any Time Muttai ❤️`;
                       <td className="px-6 py-3.5 font-medium text-slate-800">
                         {c.name || "—"}
                       </td>
-                      <td className="px-6 py-3.5">
-                        <span className="inline-flex items-center gap-1.5 text-slate-700">
-                          <Phone size={13} className="text-slate-400" />
-                          {c.phone}
-                        </span>
-                      </td>
-                      <td className="px-6 py-3.5">
-                        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
-                          {c.loyaltyPoints} pts
-                        </span>
-                      </td>
-                      <td className="px-6 py-3.5">
+                        <td className="px-6 py-3.5">
                         <div className="flex justify-end gap-2">
                           <Button
                             variant={isSaved ? "ghost" : "outline"}
@@ -189,6 +179,18 @@ Any Time Muttai ❤️`;
                           </Button>
                         </div>
                       </td>
+                      <td className="px-6 py-3.5">
+                        <span className="inline-flex items-center gap-1.5 text-slate-700">
+                          <Phone size={13} className="text-slate-400" />
+                          {c.phone}
+                        </span>
+                      </td>
+                      <td className="px-6 py-3.5">
+                        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                          {c.loyaltyPoints} pts
+                        </span>
+                      </td>
+                    
                     </tr>
                   );
                 })}
